@@ -101,6 +101,7 @@ export default function applyAuthMiddleware(app) {
       // @session, @checkoutTopic, @checkoutUrl
       createWebhook(session, "orders/fulfilled", "ordersWebhook")
         .then((data) => {
+          // res.status(200).send();
           console.log("webhook for ORDER FULLFILMENT created " + data);
         })
         .catch((e) => {

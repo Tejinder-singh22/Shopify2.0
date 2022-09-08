@@ -204,9 +204,14 @@ class SalesForce {
     var contactId;
     console.log(JSON.stringify(response) + 'is customer exists');
     response = JSON.parse(response);
-    if (response && response.records != null ) {
-      contactId = response.records[0]["Id"];
-      // contactId = '0032h00000iXIw2AAG'
+    // contactId = '0032h00000iXb1ZAAS'
+    if (response && response.records) {
+      // contactId = response.records[0]["Id"];
+      // if(response.records[0]==null)
+      // {
+      //   res.status(200).send();
+      // }
+      contactId = '0032h00000iXb1ZAAS'
       console.log(contactId +'is customer exists 204');
     }
     if (orderData != null) {
@@ -741,7 +746,7 @@ class SalesForce {
 
   #createSearchContactQuery(whereConditionValue) {
     return encodeURI(
-      `SELECT id, Name, ProductCode, IsActive FROM Product2 WHERE ProductCode ='${whereConditionValue}'`
+      ` SELECT id, Email, Name  FROM Contact WHERE Email='${whereConditionValue}'`
     );
   }
 
