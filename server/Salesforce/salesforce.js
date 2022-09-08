@@ -1,7 +1,7 @@
 import { json } from "express";
 import request from "request";
 import storeLog from "../Logs/storeLog.js";
-
+import ErrorHandler from "../helpers/errorHandler.js";
 class SalesForce {
   clientId =
     "3MVG9jBOyAOWY5bW2ldeqQWvO4LVpDSgnZSu6IKcVQ.ezTkQO35EgmhZVJ0L7BEoagKoKPI9b3MSLzU4NBdVm";
@@ -122,7 +122,7 @@ class SalesForce {
    * @param  [type] order         [object]
    * @return [type]               [object]
    */
-  async createSaleRecord(orderData) {
+  async createSaleRecord(orderData,next) {
     console.log(orderData.id + "we have a orderData line 84");
     try {
       var contactId = await this.#createContact(orderData);
@@ -196,7 +196,7 @@ class SalesForce {
    * @param  [type] order         [object]
    * @return [type]               [object]
    */
-  async createSaleRecurring(orderData) {
+  async createSaleRecurring(orderData,next) {
     console.log('we are in sales Reccuring')
     console.log(orderData.customer['email']+' customers email 1');
     console.log(orderData.customer.email+' customers email 2');
@@ -206,12 +206,10 @@ class SalesForce {
     response = JSON.parse(response);
     // contactId = '0032h00000iXb1ZAAS'
     if (response && response.records) {
-      // contactId = response.records[0]["Id"];
-      // if(response.records[0]==null)
-      // {
-      //   res.status(200).send();
-      // }
-      contactId = '0032h00000iXb1ZAAS'
+      if(response.records[0]==null)
+       console.log('ERROR contact id not found');
+      else
+      contactId =  response.records[0]["Id"];
       console.log(contactId +'is customer exists 204');
     }
     if (orderData != null) {
@@ -754,6 +752,7 @@ class SalesForce {
     const obj = {
       FirstName: order.shipping_address.first_name ?? "",
       LastName: order.shipping_address.last_name ?? "",
+      Email: order.customer.email ?? "",
       Phone: order.shipping_address.phone ?? order.billing_address.phone,
     };
     return obj;
@@ -805,7 +804,7 @@ class SalesForce {
       Gender__c: studentData.gender ?? "",
       zBU_Student_Email__c: studentData.customer.email ?? "",
       zBU_Student_Birthdate__c: studentData.dob ?? "",
-      AccountId: "0032h00000hmz84AAA",
+      AccountId: "0032h00000hmz84AAA",                      // of slaesforce
       MailingCity: studentData.shipping_address.city ?? "",
       MailingCountry: studentData.shipping_address.country ?? "",
       MailingLatitude: studentData.shipping_address.latitude ?? "",

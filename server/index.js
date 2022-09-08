@@ -12,6 +12,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
+import errorMiddleware  from "./middleware/error.js";
 
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
@@ -167,6 +168,8 @@ export async function createServer(
       next();
     }
   });
+
+  app.use(errorMiddleware);
 
   /**
    * @type {import('vite').ViteDevServer}
