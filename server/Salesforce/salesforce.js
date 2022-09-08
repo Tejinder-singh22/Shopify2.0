@@ -212,7 +212,7 @@ class SalesForce {
       contactId =  response.records[0]["Id"];
       console.log(contactId +'is customer exists 204');
     }
-    if (orderData != null) {
+    if (orderData) {
       var OpportunityName = `${orderData.line_items[0]["sku"]}_${orderData.email}`;
       try {
         var opportunityExist = await this.#isOpportunityExist(OpportunityName);
